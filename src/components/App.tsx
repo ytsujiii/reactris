@@ -1,7 +1,7 @@
 import React from 'react';
 import Game from './Game';
 
-function App() {
+function App(): React.ReactElement {
   return <Game />;
 }
 
