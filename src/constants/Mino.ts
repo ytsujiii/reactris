@@ -6,7 +6,14 @@ export enum MinoEvent {
   drop,
   hardDrop,
 }
-export enum MinoType {
+
+export interface MinoType {
+  rotation: MinoRotation;
+  type: BlockType;
+  coord: MinoCoord;
+}
+
+export enum BlockType {
   i,
   o,
   t,
@@ -24,156 +31,156 @@ export interface MinoCoord {
 export const MinoShape = [
   [
     [
-      [MinoType.none, MinoType.none, MinoType.none, MinoType.none],
-      [MinoType.i, MinoType.i, MinoType.i, MinoType.i],
-      [MinoType.none, MinoType.none, MinoType.none, MinoType.none],
-      [MinoType.none, MinoType.none, MinoType.none, MinoType.none],
+      [BlockType.none, BlockType.none, BlockType.none, BlockType.none],
+      [BlockType.i, BlockType.i, BlockType.i, BlockType.i],
+      [BlockType.none, BlockType.none, BlockType.none, BlockType.none],
+      [BlockType.none, BlockType.none, BlockType.none, BlockType.none],
     ],
     [
-      [MinoType.none, MinoType.none, MinoType.i, MinoType.none],
-      [MinoType.none, MinoType.none, MinoType.i, MinoType.none],
-      [MinoType.none, MinoType.none, MinoType.i, MinoType.none],
-      [MinoType.none, MinoType.none, MinoType.i, MinoType.none],
+      [BlockType.none, BlockType.none, BlockType.i, BlockType.none],
+      [BlockType.none, BlockType.none, BlockType.i, BlockType.none],
+      [BlockType.none, BlockType.none, BlockType.i, BlockType.none],
+      [BlockType.none, BlockType.none, BlockType.i, BlockType.none],
     ],
     [
-      [MinoType.none, MinoType.none, MinoType.none, MinoType.none],
-      [MinoType.none, MinoType.none, MinoType.none, MinoType.none],
-      [MinoType.i, MinoType.i, MinoType.i, MinoType.i],
-      [MinoType.none, MinoType.none, MinoType.none, MinoType.none],
+      [BlockType.none, BlockType.none, BlockType.none, BlockType.none],
+      [BlockType.none, BlockType.none, BlockType.none, BlockType.none],
+      [BlockType.i, BlockType.i, BlockType.i, BlockType.i],
+      [BlockType.none, BlockType.none, BlockType.none, BlockType.none],
     ],
     [
-      [MinoType.none, MinoType.i, MinoType.none, MinoType.none],
-      [MinoType.none, MinoType.i, MinoType.none, MinoType.none],
-      [MinoType.none, MinoType.i, MinoType.none, MinoType.none],
-      [MinoType.none, MinoType.i, MinoType.none, MinoType.none],
-    ],
-  ],
-  [
-    [
-      [MinoType.o, MinoType.o],
-      [MinoType.o, MinoType.o],
-    ],
-    [
-      [MinoType.o, MinoType.o],
-      [MinoType.o, MinoType.o],
-    ],
-    [
-      [MinoType.o, MinoType.o],
-      [MinoType.o, MinoType.o],
-    ],
-    [
-      [MinoType.o, MinoType.o],
-      [MinoType.o, MinoType.o],
+      [BlockType.none, BlockType.i, BlockType.none, BlockType.none],
+      [BlockType.none, BlockType.i, BlockType.none, BlockType.none],
+      [BlockType.none, BlockType.i, BlockType.none, BlockType.none],
+      [BlockType.none, BlockType.i, BlockType.none, BlockType.none],
     ],
   ],
   [
     [
-      [MinoType.none, MinoType.t, MinoType.none],
-      [MinoType.t, MinoType.t, MinoType.t],
-      [MinoType.none, MinoType.none, MinoType.none],
+      [BlockType.o, BlockType.o],
+      [BlockType.o, BlockType.o],
     ],
     [
-      [MinoType.none, MinoType.t, MinoType.none],
-      [MinoType.none, MinoType.t, MinoType.t],
-      [MinoType.none, MinoType.t, MinoType.none],
+      [BlockType.o, BlockType.o],
+      [BlockType.o, BlockType.o],
     ],
     [
-      [MinoType.none, MinoType.none, MinoType.none],
-      [MinoType.t, MinoType.t, MinoType.t],
-      [MinoType.none, MinoType.t, MinoType.none],
+      [BlockType.o, BlockType.o],
+      [BlockType.o, BlockType.o],
     ],
     [
-      [MinoType.none, MinoType.t, MinoType.none],
-      [MinoType.t, MinoType.t, MinoType.none],
-      [MinoType.none, MinoType.t, MinoType.none],
+      [BlockType.o, BlockType.o],
+      [BlockType.o, BlockType.o],
     ],
   ],
   [
     [
-      [MinoType.none, MinoType.s, MinoType.s],
-      [MinoType.s, MinoType.s, MinoType.none],
-      [MinoType.none, MinoType.none, MinoType.none],
+      [BlockType.none, BlockType.t, BlockType.none],
+      [BlockType.t, BlockType.t, BlockType.t],
+      [BlockType.none, BlockType.none, BlockType.none],
     ],
     [
-      [MinoType.none, MinoType.s, MinoType.none],
-      [MinoType.none, MinoType.s, MinoType.s],
-      [MinoType.none, MinoType.none, MinoType.s],
+      [BlockType.none, BlockType.t, BlockType.none],
+      [BlockType.none, BlockType.t, BlockType.t],
+      [BlockType.none, BlockType.t, BlockType.none],
     ],
     [
-      [MinoType.none, MinoType.none, MinoType.none],
-      [MinoType.none, MinoType.s, MinoType.s],
-      [MinoType.s, MinoType.s, MinoType.none],
+      [BlockType.none, BlockType.none, BlockType.none],
+      [BlockType.t, BlockType.t, BlockType.t],
+      [BlockType.none, BlockType.t, BlockType.none],
     ],
     [
-      [MinoType.s, MinoType.none, MinoType.none],
-      [MinoType.s, MinoType.s, MinoType.none],
-      [MinoType.none, MinoType.s, MinoType.none],
-    ],
-  ],
-  [
-    [
-      [MinoType.z, MinoType.z, MinoType.none],
-      [MinoType.none, MinoType.z, MinoType.z],
-      [MinoType.none, MinoType.none, MinoType.none],
-    ],
-    [
-      [MinoType.none, MinoType.none, MinoType.z],
-      [MinoType.none, MinoType.z, MinoType.z],
-      [MinoType.none, MinoType.z, MinoType.none],
-    ],
-    [
-      [MinoType.none, MinoType.none, MinoType.none],
-      [MinoType.z, MinoType.z, MinoType.none],
-      [MinoType.none, MinoType.z, MinoType.z],
-    ],
-    [
-      [MinoType.none, MinoType.z, MinoType.none],
-      [MinoType.z, MinoType.z, MinoType.none],
-      [MinoType.z, MinoType.none, MinoType.none],
+      [BlockType.none, BlockType.t, BlockType.none],
+      [BlockType.t, BlockType.t, BlockType.none],
+      [BlockType.none, BlockType.t, BlockType.none],
     ],
   ],
   [
     [
-      [MinoType.j, MinoType.none, MinoType.none],
-      [MinoType.j, MinoType.j, MinoType.j],
-      [MinoType.none, MinoType.none, MinoType.none],
+      [BlockType.none, BlockType.s, BlockType.s],
+      [BlockType.s, BlockType.s, BlockType.none],
+      [BlockType.none, BlockType.none, BlockType.none],
     ],
     [
-      [MinoType.none, MinoType.j, MinoType.j],
-      [MinoType.none, MinoType.j, MinoType.none],
-      [MinoType.none, MinoType.j, MinoType.none],
+      [BlockType.none, BlockType.s, BlockType.none],
+      [BlockType.none, BlockType.s, BlockType.s],
+      [BlockType.none, BlockType.none, BlockType.s],
     ],
     [
-      [MinoType.none, MinoType.none, MinoType.none],
-      [MinoType.j, MinoType.j, MinoType.j],
-      [MinoType.none, MinoType.none, MinoType.j],
+      [BlockType.none, BlockType.none, BlockType.none],
+      [BlockType.none, BlockType.s, BlockType.s],
+      [BlockType.s, BlockType.s, BlockType.none],
     ],
     [
-      [MinoType.none, MinoType.j, MinoType.none],
-      [MinoType.none, MinoType.j, MinoType.none],
-      [MinoType.j, MinoType.j, MinoType.none],
+      [BlockType.s, BlockType.none, BlockType.none],
+      [BlockType.s, BlockType.s, BlockType.none],
+      [BlockType.none, BlockType.s, BlockType.none],
     ],
   ],
   [
     [
-      [MinoType.none, MinoType.none, MinoType.l],
-      [MinoType.l, MinoType.l, MinoType.l],
-      [MinoType.none, MinoType.none, MinoType.none],
+      [BlockType.z, BlockType.z, BlockType.none],
+      [BlockType.none, BlockType.z, BlockType.z],
+      [BlockType.none, BlockType.none, BlockType.none],
     ],
     [
-      [MinoType.none, MinoType.l, MinoType.none],
-      [MinoType.none, MinoType.l, MinoType.none],
-      [MinoType.none, MinoType.l, MinoType.l],
+      [BlockType.none, BlockType.none, BlockType.z],
+      [BlockType.none, BlockType.z, BlockType.z],
+      [BlockType.none, BlockType.z, BlockType.none],
     ],
     [
-      [MinoType.none, MinoType.none, MinoType.none],
-      [MinoType.l, MinoType.l, MinoType.l],
-      [MinoType.l, MinoType.none, MinoType.none],
+      [BlockType.none, BlockType.none, BlockType.none],
+      [BlockType.z, BlockType.z, BlockType.none],
+      [BlockType.none, BlockType.z, BlockType.z],
     ],
     [
-      [MinoType.l, MinoType.l, MinoType.none],
-      [MinoType.none, MinoType.l, MinoType.none],
-      [MinoType.none, MinoType.l, MinoType.none],
+      [BlockType.none, BlockType.z, BlockType.none],
+      [BlockType.z, BlockType.z, BlockType.none],
+      [BlockType.z, BlockType.none, BlockType.none],
+    ],
+  ],
+  [
+    [
+      [BlockType.j, BlockType.none, BlockType.none],
+      [BlockType.j, BlockType.j, BlockType.j],
+      [BlockType.none, BlockType.none, BlockType.none],
+    ],
+    [
+      [BlockType.none, BlockType.j, BlockType.j],
+      [BlockType.none, BlockType.j, BlockType.none],
+      [BlockType.none, BlockType.j, BlockType.none],
+    ],
+    [
+      [BlockType.none, BlockType.none, BlockType.none],
+      [BlockType.j, BlockType.j, BlockType.j],
+      [BlockType.none, BlockType.none, BlockType.j],
+    ],
+    [
+      [BlockType.none, BlockType.j, BlockType.none],
+      [BlockType.none, BlockType.j, BlockType.none],
+      [BlockType.j, BlockType.j, BlockType.none],
+    ],
+  ],
+  [
+    [
+      [BlockType.none, BlockType.none, BlockType.l],
+      [BlockType.l, BlockType.l, BlockType.l],
+      [BlockType.none, BlockType.none, BlockType.none],
+    ],
+    [
+      [BlockType.none, BlockType.l, BlockType.none],
+      [BlockType.none, BlockType.l, BlockType.none],
+      [BlockType.none, BlockType.l, BlockType.l],
+    ],
+    [
+      [BlockType.none, BlockType.none, BlockType.none],
+      [BlockType.l, BlockType.l, BlockType.l],
+      [BlockType.l, BlockType.none, BlockType.none],
+    ],
+    [
+      [BlockType.l, BlockType.l, BlockType.none],
+      [BlockType.none, BlockType.l, BlockType.none],
+      [BlockType.none, BlockType.l, BlockType.none],
     ],
   ],
 ];

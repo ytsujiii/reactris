@@ -1,10 +1,10 @@
 import { makeStyles } from '@material-ui/styles';
 import React from 'react';
-import { BoardSquares } from '../constants/Board';
+import { BlockType } from '../constants/Mino';
 import Square from './Square';
 
 interface Props {
-  squares: BoardSquares;
+  squares: BlockType[][];
 }
 
 const useStyles = makeStyles({

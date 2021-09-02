@@ -1,10 +1,10 @@
 import { makeStyles } from '@material-ui/styles';
 import clsx from 'clsx';
 import React, { useCallback } from 'react';
-import { MinoType } from '../constants/Mino';
+import { BlockType } from '../constants/Mino';
 
 interface Props {
-  state: MinoType;
+  state: BlockType;
 }
 
 const useStyles = makeStyles({
@@ -39,21 +39,21 @@ const useStyles = makeStyles({
 export default function Square(props: Props): React.ReactElement {
   const classes = useStyles();
   const { state } = props;
-  const getSquareStyle = useCallback((state: MinoType) => {
+  const getSquareStyle = useCallback((state: BlockType) => {
     switch (state) {
-      case MinoType.i:
+      case BlockType.i:
         return classes.i;
-      case MinoType.o:
+      case BlockType.o:
         return classes.o;
-      case MinoType.t:
+      case BlockType.t:
         return classes.t;
-      case MinoType.s:
+      case BlockType.s:
         return classes.s;
-      case MinoType.z:
+      case BlockType.z:
         return classes.z;
-      case MinoType.j:
+      case BlockType.j:
         return classes.j;
-      case MinoType.l:
+      case BlockType.l:
         return classes.l;
       default:
         return null;
