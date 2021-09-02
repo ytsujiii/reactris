@@ -8,64 +8,33 @@ export default function Game(): React.ReactElement {
   const [squares, setSquares] = useState<BlockType[][]>();
   const [mino, setMino] = useState<MinoType>();
   const minoRef = useRef<MinoType>();
+  const squaresRef = useRef<typeof squares>();
   useEffect(() => {
     minoRef.current = mino;
   }, [mino]);
+  useEffect(() => {
+    squaresRef.current = squares;
+  }, [squares]);
 
-  const moveLeft = useCallback((): void => {
-    move({ y: 0, x: -1 });
-  }, []);
-  const moveRight = useCallback((): void => {
-    move({ y: 0, x: 1 });
-  }, []);
-  const move = useCallback(
-    (diff: MinoCoord): void => {
-      if (!minoRef.current || !squares) return;
-      const newCoord = { y: minoRef.current.coord.y + diff.y, x: minoRef.current.coord.x + diff.x };
-      const result = placeMinoIfPossible(squares, newCoord, minoRef.current.rotation);
-      if (result) {
-        setSquares(result);
-        setMino({ ...minoRef.current, coord: newCoord });
-      }
-    },
-    [squares]
-  );
-  const rotate = useCallback(
-    (rotationDiff: 1 | 3): void => {
-      if (!minoRef.current || !squares) return;
-      const newRotation = ((minoRef.current.rotation + rotationDiff) % 4) as MinoRotation;
-      const result = placeMinoIfPossible(squares, minoRef.current.coord, newRotation);
-      if (result) {
-        setMino({ ...minoRef.current, rotation: newRotation });
-        setSquares(result);
-      }
-    },
-    [squares]
-  );
-  const rotateLeft = useCallback((): void => {
-    rotate(3);
-  }, [rotate]);
-  const rotateRight = useCallback((): void => {
-    rotate(1);
-  }, [rotate]);
   const placeMinoIfPossible = useCallback(
-    (oldSquares: BlockType[][], newCoord: MinoCoord, newRotation: MinoRotation): BlockType[][] | null => {
+    (newCoord: MinoCoord, newRotation: MinoRotation): void => {
       console.debug('placeMinoIfPossible');
-      console.debug('oldSquares:', oldSquares);
+      console.debug('oldSquares:', squaresRef.current);
       console.debug('newCoord:', newCoord);
       console.debug('newRotation:', newRotation);
-      if (!mino) {
+      if (!minoRef.current || !squaresRef.current) {
         console.log('mino undefined');
-        return null;
+        return;
       }
 
-      const newSquares = copySquares(oldSquares);
-      const oldMinoShape = MinoShape[mino.type][mino.rotation];
-      const newMinoShape = MinoShape[mino.type][newRotation];
+      const newSquares = copySquares(squaresRef.current);
+      const oldMinoShape = MinoShape[minoRef.current.type][minoRef.current.rotation];
+      const newMinoShape = MinoShape[minoRef.current.type][newRotation];
       // delete current mino
       oldMinoShape.map((row, dy) => {
         row.map((square, dx) => {
-          newSquares[mino.coord.y + dy][mino.coord.x + dx] = BlockType.none;
+          if (!minoRef.current) return;
+          newSquares[minoRef.current.coord.y + dy][minoRef.current.coord.x + dx] = BlockType.none;
         });
       });
       // place new mino
@@ -73,6 +42,7 @@ export default function Game(): React.ReactElement {
       let invalid = false;
       newMinoShape.map((row, dy) => {
         row.map((square, dx) => {
+          if (!squaresRef.current) return;  // type guard
           console.debug('チェック対象:', { y: newCoord.y + dy, x: newCoord.x + dx });
           if (square === BlockType.none) {
             console.debug('ここにはブロックがないので無視');
@@ -83,7 +53,7 @@ export default function Game(): React.ReactElement {
             console.debug('ブロックが画面外にはみ出している');
             invalid = true;
             return;
-          } else if (oldSquares[newCoord.y][newCoord.x] !== BlockType.none) {
+          } else if (squaresRef.current[newCoord.y][newCoord.x] !== BlockType.none) {
             console.debug('ここには既にブロックがある');
             invalid = true;
             return;
@@ -91,10 +61,42 @@ export default function Game(): React.ReactElement {
           newSquares[newCoord.y + dy][newCoord.x + dx] = square;
         });
       });
-      return invalid ? null : newSquares;
+
+      if (invalid) return;
+      setMino({ ...minoRef.current, coord: newCoord, rotation: newRotation });
+      setSquares(newSquares);
     },
-    [mino]
+    []
   );
+
+  const moveLeft = useCallback((): void => {
+    move({ y: 0, x: -1 });
+  }, []);
+  const moveRight = useCallback((): void => {
+    move({ y: 0, x: 1 });
+  }, []);
+  const move = useCallback(
+    (diff: MinoCoord): void => {
+      if (!minoRef.current) return;
+      const newCoord = { y: minoRef.current.coord.y + diff.y, x: minoRef.current.coord.x + diff.x };
+      placeMinoIfPossible(newCoord, minoRef.current.rotation);
+    },
+    [placeMinoIfPossible]
+  );
+  const rotate = useCallback(
+    (rotationDiff: 1 | 3): void => {
+      if (!minoRef.current) return;
+      const newRotation = ((minoRef.current.rotation + rotationDiff) % 4) as MinoRotation;
+      placeMinoIfPossible(minoRef.current.coord, newRotation);
+    },
+    [placeMinoIfPossible]
+  );
+  const rotateLeft = useCallback((): void => {
+    rotate(3);
+  }, [rotate]);
+  const rotateRight = useCallback((): void => {
+    rotate(1);
+  }, [rotate]);
   const initializeSquares = useCallback((initialMino: MinoType): BlockType[][] => {
     const initialMinoShape = MinoShape[initialMino.type][initialMino.rotation];
     const initialSquares = Array.from(Array(height)).map(() => {
@@ -116,6 +118,7 @@ export default function Game(): React.ReactElement {
 
   const handleKeyPress = useCallback(
     (ev: KeyboardEvent) => {
+      console.log(ev.key);
       switch (ev.key) {
         case 'z':
           rotateLeft();
