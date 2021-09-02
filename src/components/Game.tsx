@@ -69,12 +69,6 @@ export default function Game(): React.ReactElement {
     []
   );
 
-  const moveLeft = useCallback((): void => {
-    move({ y: 0, x: -1 });
-  }, []);
-  const moveRight = useCallback((): void => {
-    move({ y: 0, x: 1 });
-  }, []);
   const move = useCallback(
     (diff: MinoCoord): void => {
       if (!minoRef.current) return;
@@ -83,6 +77,12 @@ export default function Game(): React.ReactElement {
     },
     [placeMinoIfPossible]
   );
+  const moveLeft = useCallback((): void => {
+    move({ y: 0, x: -1 });
+  }, [move]);
+  const moveRight = useCallback((): void => {
+    move({ y: 0, x: 1 });
+  }, [move]);
   const rotate = useCallback(
     (rotationDiff: 1 | 3): void => {
       if (!minoRef.current) return;
