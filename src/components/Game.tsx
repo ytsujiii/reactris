@@ -30,12 +30,6 @@ export default function Game(): React.ReactElement {
     },
     [squares]
   );
-  const rotateLeft = useCallback((): void => {
-    rotate(3);
-  }, []);
-  const rotateRight = useCallback((): void => {
-    rotate(1);
-  }, []);
   const rotate = useCallback(
     (rotationDiff: 1 | 3): void => {
       if (!minoRef.current || !squares) return;
@@ -48,6 +42,12 @@ export default function Game(): React.ReactElement {
     },
     [squares]
   );
+  const rotateLeft = useCallback((): void => {
+    rotate(3);
+  }, [rotate]);
+  const rotateRight = useCallback((): void => {
+    rotate(1);
+  }, [rotate]);
   const placeMinoIfPossible = useCallback(
     (oldSquares: BlockType[][], newCoord: MinoCoord, newRotation: MinoRotation): BlockType[][] | null => {
       console.debug('placeMinoIfPossible');
