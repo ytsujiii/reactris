@@ -34,15 +34,18 @@ export default function Game(): React.ReactElement {
       oldMinoShape.map((row, dy) => {
         row.map((square, dx) => {
           if (!minoRef.current) return;
+          else if (!isValidCoord({ y: minoRef.current.coord.y + dy, x: minoRef.current.coord.x + dx })) {
+            return;
+          }
           newSquares[minoRef.current.coord.y + dy][minoRef.current.coord.x + dx] = BlockType.none;
         });
       });
       // place new mino
       console.debug('ミノを置けるか・動かせるかをチェックする');
+      console.debug(newSquares);
       let invalid = false;
       newMinoShape.map((row, dy) => {
         row.map((square, dx) => {
-          if (!squaresRef.current) return;  // type guard
           console.debug('チェック対象:', { y: newCoord.y + dy, x: newCoord.x + dx });
           if (square === BlockType.none) {
             console.debug('ここにはブロックがないので無視');
@@ -53,16 +56,20 @@ export default function Game(): React.ReactElement {
             console.debug('ブロックが画面外にはみ出している');
             invalid = true;
             return;
-          } else if (squaresRef.current[newCoord.y][newCoord.x] !== BlockType.none) {
-            console.debug('ここには既にブロックがある');
+          } else if (newSquares[newCoord.y + dy][newCoord.x + dx] !== BlockType.none) {
+            console.debug('ここには既にブロックがある', newSquares[newCoord.y + dy][newCoord.x + dx]);
             invalid = true;
             return;
           }
+          console.debug("OK!!!");
           newSquares[newCoord.y + dy][newCoord.x + dx] = square;
         });
       });
 
-      if (invalid) return;
+      if (invalid) {
+        console.log("Cannot perform this move");
+        return;
+      }
       setMino({ ...minoRef.current, coord: newCoord, rotation: newRotation });
       setSquares(newSquares);
     },
