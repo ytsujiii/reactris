@@ -12,6 +12,9 @@ export interface MinoInterface {
   type: MinoType;
   coord: MinoCoord;
 }
+export const getInitialMino = (type: MinoType): MinoInterface => {
+  return { type, rotation: 0, coord: initialCoords[type] };
+};
 export enum MinoType {
   i,
   o,
@@ -36,6 +39,15 @@ export interface MinoCoord {
   y: number;
   x: number;
 }
+const initialCoords: MinoCoord[] = [
+  { y: 0, x: 3 }, // i
+  { y: 1, x: 4 }, // o
+  { y: 1, x: 3 }, // t
+  { y: 1, x: 3 }, // s
+  { y: 1, x: 3 }, // z
+  { y: 1, x: 3 }, // j
+  { y: 1, x: 3 }, // l
+];
 export const getMinoShape = (type: MinoType, rotation: MinoRotation): BlockType[][] => {
   return MinoShape[type][rotation];
 };
