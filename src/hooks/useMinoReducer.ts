@@ -18,12 +18,6 @@ export default function useMinoReducer(
     updater();
   }, []);
 
-  const setBoardStates = (newMino: MinoInterface, newSquares: BlockType[][]): void => {
-    minoRef.current = newMino;
-    squaresRef.current = newSquares;
-    updater();
-  };
-
   const placeMinoIfPossible = useCallback((newCoord: MinoCoord, newRotation: MinoRotation): boolean => {
     console.debug('placeMinoIfPossible');
     console.debug('oldSquares:', squaresRef.current);
@@ -80,7 +74,8 @@ export default function useMinoReducer(
       return false;
     }
 
-    setBoardStates({ ...minoRef.current, coord: newCoord, rotation: newRotation }, newSquares);
+    minoRef.current = { ...minoRef.current, coord: newCoord, rotation: newRotation };
+    squaresRef.current = newSquares;
     return true;
   }, []);
 
@@ -94,15 +89,18 @@ export default function useMinoReducer(
   );
   const moveLeft = useCallback((): void => {
     move({ y: 0, x: -1 });
+    updater();
   }, [move]);
   const moveRight = useCallback((): void => {
     move({ y: 0, x: 1 });
+    updater();
   }, [move]);
   const drop = useCallback((): void => {
     const result = move({ y: 1, x: 0 });
     if (!result) {
       changeMino();
     }
+    updater();
   }, [move]);
   const rotate = useCallback(
     (rotationDiff: 1 | 3): void => {
@@ -114,9 +112,11 @@ export default function useMinoReducer(
   );
   const rotateLeft = useCallback((): void => {
     rotate(3);
+    updater();
   }, [rotate]);
   const rotateRight = useCallback((): void => {
     rotate(1);
+    updater();
   }, [rotate]);
   const initializeSquares = useCallback((initialMino: MinoInterface): BlockType[][] => {
     const initialMinoShape = getMinoShape(initialMino.type, initialMino.rotation);
