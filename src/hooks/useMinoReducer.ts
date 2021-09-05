@@ -19,6 +19,20 @@ export default function useMinoReducer(
     boardUpdater();
   }, []);
 
+  const scan = (): void => {
+    const emptyLine = Array.from(Array(width), () => BlockType.none);
+    // 揃っていない行のみを抽出する
+    const scanned = squaresRef.current.filter((row) => {
+      for (let i = 0; i < row.length; i++) {
+        if (row[i] === BlockType.none) {
+          return true;
+        }
+      }
+      return false;
+    });
+    squaresRef.current = [...Array.from(Array(height - scanned.length), () => emptyLine), ...scanned];
+  };
+
   const placeMinoIfPossible = useCallback((newCoord: MinoCoord, newRotation: MinoRotation): boolean => {
     console.debug('placeMinoIfPossible');
     console.debug('oldSquares:', squaresRef.current);
@@ -100,6 +114,7 @@ export default function useMinoReducer(
     if (!minoRef.current) return;
     const result = move({ y: 1, x: 0 });
     if (!result) {
+      scan();
       changeMino();
       placeMinoIfPossible(minoRef.current.coord, minoRef.current.rotation);
       timerClearer();
@@ -110,6 +125,7 @@ export default function useMinoReducer(
     if (!minoRef.current) return;
     // eslint-disable-next-line no-empty
     while (move({ y: 1, x: 0 })) {}
+    scan();
     changeMino();
     placeMinoIfPossible(minoRef.current.coord, minoRef.current.rotation);
     timerClearer();
