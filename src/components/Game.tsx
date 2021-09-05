@@ -38,7 +38,7 @@ export default function Game(): React.ReactElement {
       drop();
     }, 1000);
     return () => clearInterval(id);
-  }, [drop]);
+  }, [drop, boardState]);
   useEffect(() => {
     document.addEventListener('keydown', handleKeyPress);
     return () => {
