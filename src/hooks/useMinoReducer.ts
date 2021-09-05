@@ -96,16 +96,20 @@ export default function useMinoReducer(
     updater();
   }, [move]);
   const drop = useCallback((): void => {
+    if (!minoRef.current) return;
     const result = move({ y: 1, x: 0 });
     if (!result) {
       changeMino();
+      placeMinoIfPossible(minoRef.current.coord, minoRef.current.rotation);
     }
     updater();
   }, [move]);
   const hardDrop = (): void => {
+    if (!minoRef.current) return;
     // eslint-disable-next-line no-empty
     while (move({ y: 1, x: 0 })) {}
     changeMino();
+    placeMinoIfPossible(minoRef.current.coord, minoRef.current.rotation);
     updater();
   };
   const rotate = useCallback(
