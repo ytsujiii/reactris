@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect } from 'react';
-import useMinoReducer from '../reducers/MinoReducer';
+import useMinoReducer from '../hooks/useMinoReducer';
 import BoardComponent from './Board';
 
 export default function Game(): React.ReactElement {
