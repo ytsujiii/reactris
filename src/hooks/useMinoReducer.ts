@@ -23,14 +23,13 @@ export default function useMinoReducer(
     updater();
   };
 
-  const placeMinoIfPossible = useCallback((newCoord: MinoCoord, newRotation: MinoRotation): void => {
+  const placeMinoIfPossible = useCallback((newCoord: MinoCoord, newRotation: MinoRotation): boolean => {
     console.debug('placeMinoIfPossible');
     console.debug('oldSquares:', squaresRef.current);
     console.debug('newCoord:', newCoord);
     console.debug('newRotation:', newRotation);
     if (!minoRef.current || !squaresRef.current) {
-      console.log('mino undefined');
-      return;
+      return false;
     }
 
     const newSquares = copySquares(squaresRef.current);
@@ -74,17 +73,18 @@ export default function useMinoReducer(
 
     if (invalid) {
       console.log('Cannot perform this move');
-      return;
+      return false;
     }
 
     setBoardStates({ ...minoRef.current, coord: newCoord, rotation: newRotation }, newSquares);
+    return true;
   }, []);
 
   const move = useCallback(
-    (diff: MinoCoord): void => {
-      if (!minoRef.current) return;
+    (diff: MinoCoord): boolean => {
+      if (!minoRef.current) return false;
       const newCoord = { y: minoRef.current.coord.y + diff.y, x: minoRef.current.coord.x + diff.x };
-      placeMinoIfPossible(newCoord, minoRef.current.rotation);
+      return placeMinoIfPossible(newCoord, minoRef.current.rotation);
     },
     [placeMinoIfPossible]
   );
