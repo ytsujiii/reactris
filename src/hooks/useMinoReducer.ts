@@ -12,6 +12,7 @@ export default function useMinoReducer(
 
   // initialize game
   useEffect(() => {
+    if (!minoRef.current) return;
     console.info('Initializing game');
     squaresRef.current = initializeSquares(minoRef.current);
     updater();
