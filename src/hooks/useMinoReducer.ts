@@ -1,5 +1,13 @@
 import React, { useCallback, useEffect, useRef } from 'react';
-import { BlockType, getInitialMino, getMinoShape, MinoCoord, MinoInterface, MinoRotation } from '../constants/Mino';
+import {
+  BlockType,
+  getInitialMino,
+  getMinoShape,
+  MinoCoord,
+  MinoInterface,
+  MinoRotation,
+  MinoType,
+} from '../constants/Mino';
 import useMinoBag from './UseMinoBag';
 
 export default function useMinoReducer(
@@ -14,11 +22,13 @@ export default function useMinoReducer(
   () => void,
   () => void,
   () => void,
-  () => void
+  () => void,
+  MinoType[] | undefined,
+  MinoType[] | undefined
 ] {
   const width = 10;
   const height = 20;
-  const [minoRef, changeMino] = useMinoBag();
+  const [minoRef, changeMino, minoBag, nextMinoBag] = useMinoBag();
   const holdingMinoRef = useRef<MinoInterface>();
   const squaresRef = useRef<BlockType[][]>([]);
   const stiffTimerId = useRef<number>();
@@ -227,5 +237,17 @@ export default function useMinoReducer(
     return 0 <= c.x && 0 <= c.y && c.x < width && c.y < height;
   };
 
-  return [holdingMinoRef, squaresRef, moveLeft, moveRight, drop, hardDrop, rotateLeft, rotateRight, hold];
+  return [
+    holdingMinoRef,
+    squaresRef,
+    moveLeft,
+    moveRight,
+    drop,
+    hardDrop,
+    rotateLeft,
+    rotateRight,
+    hold,
+    minoBag,
+    nextMinoBag,
+  ];
 }

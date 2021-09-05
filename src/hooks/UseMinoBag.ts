@@ -15,8 +15,14 @@ const getNewMinoBag = (): MinoType[] => {
   return minoBag;
 };
 
-export default function useMinoBag(): [React.MutableRefObject<MinoInterface | undefined>, () => void] {
+export default function useMinoBag(): [
+  React.MutableRefObject<MinoInterface | undefined>,
+  () => void,
+  MinoType[] | undefined,
+  MinoType[] | undefined
+] {
   const minoBag = useRef<MinoType[]>();
+  const nextMinoBag = useRef<MinoType[]>();
   const popMinoBag = useCallback((): MinoInterface | undefined => {
     if (!minoBag.current) return;
     return getInitialMino(minoBag.current.shift() as MinoType);
@@ -27,6 +33,7 @@ export default function useMinoBag(): [React.MutableRefObject<MinoInterface | un
   useEffect(() => {
     if (mino.current) return;
     minoBag.current = getNewMinoBag();
+    nextMinoBag.current = getNewMinoBag();
     mino.current = popMinoBag();
   }, []);
 
@@ -34,12 +41,13 @@ export default function useMinoBag(): [React.MutableRefObject<MinoInterface | un
     if (!minoBag.current) return;
 
     if (minoBag.current.length <= 0) {
-      minoBag.current = getNewMinoBag();
+      minoBag.current = nextMinoBag.current;
+      nextMinoBag.current = getNewMinoBag();
       mino.current = popMinoBag();
     } else {
       mino.current = popMinoBag();
     }
   }, []);
 
-  return [mino, changeMino];
+  return [mino, changeMino, minoBag.current, nextMinoBag.current];
 }

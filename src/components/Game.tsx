@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useReducer, useRef, useState } from 'rea
 import useMinoReducer from '../hooks/useMinoReducer';
 import BoardComponent from './Board';
 import HoldingMinoContainer from './HoldingMinoContainer';
+import MinoBagComponent from './MinoBagComponent';
 
 export default function Game(): React.ReactElement {
   const das = 100; // (ms)
@@ -12,8 +13,19 @@ export default function Game(): React.ReactElement {
   const [movingRight, setMovingRight] = useState<boolean>(false);
   const timeoutIdRef = useRef<number>();
   const intervalIdRef = useRef<number>();
-  const [holdingMinoRef, squaresRef, moveLeft, moveRight, drop, hardDrop, rotateLeft, rotateRight, hold] =
-    useMinoReducer(boardUpdater, timerClearer);
+  const [
+    holdingMinoRef,
+    squaresRef,
+    moveLeft,
+    moveRight,
+    drop,
+    hardDrop,
+    rotateLeft,
+    rotateRight,
+    hold,
+    minoBag,
+    nextMinoBag,
+  ] = useMinoReducer(boardUpdater, timerClearer);
 
   const handleKeyDown = useCallback(
     async (ev) => {
@@ -113,6 +125,7 @@ export default function Game(): React.ReactElement {
     <div>
       {!squaresRef.current || <BoardComponent boardState={boardState} squares={squaresRef.current} />}
       <HoldingMinoContainer holdingMino={holdingMinoRef.current} />
+      <MinoBagComponent minoBag={minoBag} nextMinoBag={nextMinoBag} />
     </div>
   );
 }
