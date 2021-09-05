@@ -22,6 +22,7 @@ export default function useMinoBag(): [React.MutableRefObject<MinoInterface | un
     return getInitialMino(minoBag.current.pop() as MinoType);
   }, []);
   const mino = useRef<MinoInterface>();
+  console.log(minoBag.current);
 
   useEffect(() => {
     if (mino.current) return;
@@ -32,7 +33,7 @@ export default function useMinoBag(): [React.MutableRefObject<MinoInterface | un
   const changeMino = useCallback(() => {
     if (!minoBag.current) return;
 
-    if (minoBag.current.length <= 1) {
+    if (minoBag.current.length <= 0) {
       minoBag.current = getNewMinoBag();
       mino.current = popMinoBag();
     } else {
