@@ -4,7 +4,7 @@ import BoardComponent from './Board';
 
 export default function Game(): React.ReactElement {
   const [boardState, dispatch] = useReducer((state: number) => state + 1, 0);
-  const [squaresRef, moveLeft, moveRight, drop, rotateLeft, rotateRight] = useMinoReducer(dispatch);
+  const [squaresRef, moveLeft, moveRight, drop, hardDrop, rotateLeft, rotateRight] = useMinoReducer(dispatch);
 
   const handleKeyPress = useCallback(
     (ev: KeyboardEvent) => {
@@ -21,6 +21,9 @@ export default function Game(): React.ReactElement {
           break;
         case 'ArrowRight':
           moveRight();
+          break;
+        case 'ArrowUp':
+          hardDrop();
           break;
         default:
           break;

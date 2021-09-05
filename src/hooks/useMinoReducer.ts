@@ -4,7 +4,7 @@ import useMinoBag from './UseMinoBag';
 
 export default function useMinoReducer(
   updater: () => void
-): [React.MutableRefObject<BlockType[][]>, () => void, () => void, () => void, () => void, () => void] {
+): [React.MutableRefObject<BlockType[][]>, () => void, () => void, () => void, () => void, () => void, () => void] {
   const width = 10;
   const height = 20;
   const [minoRef, changeMino] = useMinoBag();
@@ -102,6 +102,12 @@ export default function useMinoReducer(
     }
     updater();
   }, [move]);
+  const hardDrop = (): void => {
+    // eslint-disable-next-line no-empty
+    while (move({ y: 1, x: 0 })) {}
+    changeMino();
+    updater();
+  };
   const rotate = useCallback(
     (rotationDiff: 1 | 3): void => {
       if (!minoRef.current) return;
@@ -137,5 +143,5 @@ export default function useMinoReducer(
     return 0 <= c.x && 0 <= c.y && c.x < width && c.y < height;
   };
 
-  return [squaresRef, moveLeft, moveRight, drop, rotateLeft, rotateRight];
+  return [squaresRef, moveLeft, moveRight, drop, hardDrop, rotateLeft, rotateRight];
 }
