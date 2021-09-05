@@ -95,6 +95,14 @@ export default function useMinoReducer(
     return true;
   }, []);
 
+  const onMinoStiff = (): void => {
+    if (!minoRef.current) return;
+    scan();
+    changeMino();
+    placeMinoIfPossible(minoRef.current.coord, minoRef.current.rotation);
+    timerClearer();
+  };
+
   const move = useCallback(
     (diff: MinoCoord): boolean => {
       if (!minoRef.current) return false;
@@ -116,11 +124,7 @@ export default function useMinoReducer(
     const result = move({ y: 1, x: 0 });
     if (!result) {
       stiffTimerId.current = window.setTimeout(() => {
-        if (!minoRef.current) return;
-        scan();
-        changeMino();
-        placeMinoIfPossible(minoRef.current.coord, minoRef.current.rotation);
-        timerClearer();
+        onMinoStiff();
         stiffTimerId.current = undefined;
       }, 500);
     }
@@ -128,13 +132,9 @@ export default function useMinoReducer(
     return result;
   }, [move]);
   const hardDrop = (): void => {
-    if (!minoRef.current) return;
     // eslint-disable-next-line no-empty
     while (move({ y: 1, x: 0 })) {}
-    scan();
-    changeMino();
-    placeMinoIfPossible(minoRef.current.coord, minoRef.current.rotation);
-    timerClearer();
+    onMinoStiff();
     boardUpdater();
   };
   const rotate = useCallback(
