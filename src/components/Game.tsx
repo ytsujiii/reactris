@@ -3,8 +3,12 @@ import useMinoReducer from '../hooks/useMinoReducer';
 import BoardComponent from './Board';
 
 export default function Game(): React.ReactElement {
-  const [boardState, dispatch] = useReducer((state: number) => state + 1, 0);
-  const [squaresRef, moveLeft, moveRight, drop, hardDrop, rotateLeft, rotateRight] = useMinoReducer(dispatch);
+  const [shouldClearTimer, timerClearer] = useReducer((state: number) => state + 1, 0);
+  const [boardState, boardUpdater] = useReducer((state: number) => state + 1, 0);
+  const [squaresRef, moveLeft, moveRight, drop, hardDrop, rotateLeft, rotateRight] = useMinoReducer(
+    boardUpdater,
+    timerClearer
+  );
 
   const handleKeyPress = useCallback(
     (ev: KeyboardEvent) => {
@@ -38,7 +42,7 @@ export default function Game(): React.ReactElement {
       drop();
     }, 1000);
     return () => clearInterval(id);
-  }, [drop, boardState]);
+  }, [drop, shouldClearTimer]);
   useEffect(() => {
     document.addEventListener('keydown', handleKeyPress);
     return () => {

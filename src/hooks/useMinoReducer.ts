@@ -3,7 +3,8 @@ import { BlockType, getMinoShape, MinoCoord, MinoInterface, MinoRotation } from 
 import useMinoBag from './UseMinoBag';
 
 export default function useMinoReducer(
-  updater: () => void
+  boardUpdater: () => void,
+  timerClearer: () => void
 ): [React.MutableRefObject<BlockType[][]>, () => void, () => void, () => void, () => void, () => void, () => void] {
   const width = 10;
   const height = 20;
@@ -15,7 +16,7 @@ export default function useMinoReducer(
     if (!minoRef.current) return;
     console.info('Initializing game');
     squaresRef.current = initializeSquares(minoRef.current);
-    updater();
+    boardUpdater();
   }, []);
 
   const placeMinoIfPossible = useCallback((newCoord: MinoCoord, newRotation: MinoRotation): boolean => {
@@ -89,11 +90,11 @@ export default function useMinoReducer(
   );
   const moveLeft = useCallback((): void => {
     move({ y: 0, x: -1 });
-    updater();
+    boardUpdater();
   }, [move]);
   const moveRight = useCallback((): void => {
     move({ y: 0, x: 1 });
-    updater();
+    boardUpdater();
   }, [move]);
   const drop = useCallback((): void => {
     if (!minoRef.current) return;
@@ -101,8 +102,9 @@ export default function useMinoReducer(
     if (!result) {
       changeMino();
       placeMinoIfPossible(minoRef.current.coord, minoRef.current.rotation);
+      timerClearer();
     }
-    updater();
+    boardUpdater();
   }, [move]);
   const hardDrop = (): void => {
     if (!minoRef.current) return;
@@ -110,7 +112,8 @@ export default function useMinoReducer(
     while (move({ y: 1, x: 0 })) {}
     changeMino();
     placeMinoIfPossible(minoRef.current.coord, minoRef.current.rotation);
-    updater();
+    timerClearer();
+    boardUpdater();
   };
   const rotate = useCallback(
     (rotationDiff: 1 | 3): void => {
@@ -122,11 +125,11 @@ export default function useMinoReducer(
   );
   const rotateLeft = useCallback((): void => {
     rotate(3);
-    updater();
+    boardUpdater();
   }, [rotate]);
   const rotateRight = useCallback((): void => {
     rotate(1);
-    updater();
+    boardUpdater();
   }, [rotate]);
   const initializeSquares = useCallback((initialMino: MinoInterface): BlockType[][] => {
     const initialMinoShape = getMinoShape(initialMino.type, initialMino.rotation);
