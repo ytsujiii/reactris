@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { BlockType, MinoCoord, MinoInterface, MinoRotation, MinoShape, MinoType } from '../constants/Mino';
+import { BlockType, getMinoShape, MinoCoord, MinoInterface, MinoRotation, MinoType } from '../constants/Mino';
 
 export default function useMinoReducer(): [
   BlockType[][] | undefined,
@@ -44,8 +44,8 @@ export default function useMinoReducer(): [
     }
 
     const newSquares = copySquares(squaresRef.current);
-    const oldMinoShape = MinoShape[minoRef.current.type][minoRef.current.rotation];
-    const newMinoShape = MinoShape[minoRef.current.type][newRotation];
+    const oldMinoShape = getMinoShape(minoRef.current.type, minoRef.current.rotation);
+    const newMinoShape = getMinoShape(minoRef.current.type, newRotation);
     // delete current mino
     oldMinoShape.map((row, dy) => {
       row.map((square, dx) => {
@@ -122,7 +122,7 @@ export default function useMinoReducer(): [
     rotate(1);
   }, [rotate]);
   const initializeSquares = useCallback((initialMino: MinoInterface): BlockType[][] => {
-    const initialMinoShape = MinoShape[initialMino.type][initialMino.rotation];
+    const initialMinoShape = getMinoShape(initialMino.type, initialMino.rotation);
     const initialSquares = Array.from(Array(height)).map(() => {
       return Array.from(Array(width)).map(() => BlockType.none);
     });

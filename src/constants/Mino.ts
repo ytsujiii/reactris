@@ -36,7 +36,10 @@ export interface MinoCoord {
   y: number;
   x: number;
 }
-export const MinoShape = [
+export const getMinoShape = (type: MinoType, rotation: MinoRotation): BlockType[][] => {
+  return MinoShape[type][rotation];
+};
+const MinoShape = [
   [
     [
       [BlockType.none, BlockType.none, BlockType.none, BlockType.none],
