@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useReducer, useRef, useState } from 'react';
 import useMinoReducer from '../hooks/useMinoReducer';
 import BoardComponent from './Board';
+import HoldingMinoContainer from './HoldingMinoContainer';
 
 export default function Game(): React.ReactElement {
   const das = 100; // (ms)
@@ -11,10 +12,8 @@ export default function Game(): React.ReactElement {
   const [movingRight, setMovingRight] = useState<boolean>(false);
   const timeoutIdRef = useRef<number>();
   const intervalIdRef = useRef<number>();
-  const [squaresRef, moveLeft, moveRight, drop, hardDrop, rotateLeft, rotateRight] = useMinoReducer(
-    boardUpdater,
-    timerClearer
-  );
+  const [holdingMinoRef, squaresRef, moveLeft, moveRight, drop, hardDrop, rotateLeft, rotateRight, hold] =
+    useMinoReducer(boardUpdater, timerClearer);
 
   const handleKeyDown = useCallback(
     async (ev) => {
@@ -29,7 +28,8 @@ export default function Game(): React.ReactElement {
         case 'ArrowUp':
           hardDrop();
           break;
-        case 'Space': // hold
+        case ' ':
+          hold();
           break;
         case 'ArrowDown':
           setDropping(true);
@@ -44,7 +44,7 @@ export default function Game(): React.ReactElement {
           break;
       }
     },
-    [rotateLeft, rotateRight, hardDrop]
+    [rotateLeft, rotateRight, hardDrop, hold]
   );
   const handleKeyUp = useCallback((ev) => {
     switch (ev.key) {
@@ -109,5 +109,10 @@ export default function Game(): React.ReactElement {
     };
   }, [handleKeyDown, handleKeyUp]);
 
-  return <>{!squaresRef.current || <BoardComponent boardState={boardState} squares={squaresRef.current} />}</>;
+  return (
+    <div>
+      {!squaresRef.current || <BoardComponent boardState={boardState} squares={squaresRef.current} />}
+      <HoldingMinoContainer holdingMino={holdingMinoRef.current} />
+    </div>
+  );
 }

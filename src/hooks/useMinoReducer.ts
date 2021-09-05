@@ -1,16 +1,28 @@
 import React, { useCallback, useEffect, useRef } from 'react';
-import { BlockType, getMinoShape, MinoCoord, MinoInterface, MinoRotation } from '../constants/Mino';
+import { BlockType, getInitialMino, getMinoShape, MinoCoord, MinoInterface, MinoRotation } from '../constants/Mino';
 import useMinoBag from './UseMinoBag';
 
 export default function useMinoReducer(
   boardUpdater: () => void,
   timerClearer: () => void
-): [React.MutableRefObject<BlockType[][]>, () => void, () => void, () => void, () => void, () => void, () => void] {
+): [
+  React.MutableRefObject<MinoInterface | undefined>,
+  React.MutableRefObject<BlockType[][]>,
+  () => void,
+  () => void,
+  () => void,
+  () => void,
+  () => void,
+  () => void,
+  () => void
+] {
   const width = 10;
   const height = 20;
   const [minoRef, changeMino] = useMinoBag();
+  const holdingMinoRef = useRef<MinoInterface>();
   const squaresRef = useRef<BlockType[][]>([]);
   const stiffTimerId = useRef<number>();
+  const alreadyHolded = useRef<boolean>(false);
 
   // initialize game
   useEffect(() => {
@@ -32,6 +44,48 @@ export default function useMinoReducer(
       return false;
     });
     squaresRef.current = [...Array.from(Array(height - scanned.length), () => emptyLine), ...scanned];
+  };
+
+  const hold = () => {
+    if (!minoRef.current) return;
+    if (alreadyHolded.current) return;
+
+    const newSquares = copySquares(squaresRef.current);
+    const currentMinoShape = getMinoShape(minoRef.current.type, minoRef.current.rotation);
+    // delete current mino
+    currentMinoShape.map((row, dy) => {
+      row.map((square, dx) => {
+        if (!minoRef.current) return;
+        else if (!isValidCoord({ y: minoRef.current.coord.y + dy, x: minoRef.current.coord.x + dx })) {
+          return;
+        }
+
+        if (square !== BlockType.none) {
+          newSquares[minoRef.current.coord.y + dy][minoRef.current.coord.x + dx] = BlockType.none;
+        }
+      });
+    });
+
+    if (holdingMinoRef.current) {
+      const tmp = getInitialMino(holdingMinoRef.current.type);
+      holdingMinoRef.current = getInitialMino(minoRef.current.type);
+      minoRef.current = tmp;
+    } else {
+      holdingMinoRef.current = getInitialMino(minoRef.current.type);
+      changeMino();
+    }
+
+    const nextMinoShape = getMinoShape(minoRef.current.type, minoRef.current.rotation);
+    nextMinoShape.map((row, dy) => {
+      row.map((square, dx) => {
+        if (square === BlockType.none) return;
+        if (!minoRef.current) return;
+        newSquares[minoRef.current.coord.y + dy][minoRef.current.coord.x + dx] = square;
+      });
+    });
+    squaresRef.current = newSquares;
+    alreadyHolded.current = true;
+    boardUpdater();
   };
 
   const placeMinoIfPossible = useCallback((newCoord: MinoCoord, newRotation: MinoRotation): boolean => {
@@ -100,6 +154,7 @@ export default function useMinoReducer(
     scan();
     changeMino();
     placeMinoIfPossible(minoRef.current.coord, minoRef.current.rotation);
+    alreadyHolded.current = false;
     timerClearer();
   };
 
@@ -172,5 +227,5 @@ export default function useMinoReducer(
     return 0 <= c.x && 0 <= c.y && c.x < width && c.y < height;
   };
 
-  return [squaresRef, moveLeft, moveRight, drop, hardDrop, rotateLeft, rotateRight];
+  return [holdingMinoRef, squaresRef, moveLeft, moveRight, drop, hardDrop, rotateLeft, rotateRight, hold];
 }
