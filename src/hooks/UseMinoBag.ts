@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useRef } from 'react';
 import { getInitialMino, MinoInterface, MinoType } from '../constants/Mino';
 
 const getNewMinoBag = (): MinoType[] => {
@@ -15,21 +15,21 @@ const getNewMinoBag = (): MinoType[] => {
   return minoBag;
 };
 
-export default function useMinoBag(): [MinoInterface, (newMino: MinoInterface) => void, () => void] {
+export default function useMinoBag(): [React.MutableRefObject<MinoInterface>, () => void] {
   const minoBag = useRef<MinoType[]>(getNewMinoBag());
   const popMinoBag = (): MinoInterface => {
     return getInitialMino(minoBag.current.pop() as MinoType);
   };
-  const [mino, setMino] = useState<MinoInterface>(popMinoBag);
+  const mino = useRef<MinoInterface>(popMinoBag());
 
   const changeMino = useCallback(() => {
     if (minoBag.current.length <= 1) {
       minoBag.current = getNewMinoBag();
-      setMino(popMinoBag);
+      mino.current = popMinoBag();
     } else {
-      setMino(popMinoBag);
+      mino.current = popMinoBag();
     }
   }, []);
 
-  return [mino, setMino, changeMino];
+  return [mino, changeMino];
 }

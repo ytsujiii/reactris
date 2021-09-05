@@ -4,6 +4,7 @@ import { BlockType } from '../constants/Mino';
 import Square from './Square';
 
 interface Props {
+  boardState: number;
   squares: BlockType[][];
 }
 

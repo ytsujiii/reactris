@@ -1,34 +1,20 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef } from 'react';
 import { BlockType, getMinoShape, MinoCoord, MinoInterface, MinoRotation } from '../constants/Mino';
 import useMinoBag from './UseMinoBag';
 
-export default function useMinoReducer(): [
-  BlockType[][] | undefined,
-  () => void,
-  () => void,
-  () => void,
-  () => void,
-  () => void
-] {
+export default function useMinoReducer(
+  updater: () => void
+): [React.MutableRefObject<BlockType[][]>, () => void, () => void, () => void, () => void, () => void] {
   const width = 10;
   const height = 20;
-  const [squares, setSquares] = useState<BlockType[][]>();
-  const [mino, setMino, changeMino] = useMinoBag();
-  const minoRef = useRef<MinoInterface>();
-  const squaresRef = useRef<typeof squares>();
-  useEffect(() => {
-    minoRef.current = mino;
-  }, [mino]);
-  useEffect(() => {
-    squaresRef.current = squares;
-  }, [squares]);
+  const [minoRef, changeMino] = useMinoBag();
+  const squaresRef = useRef<BlockType[][]>([]);
 
   // initialize game
   useEffect(() => {
     console.info('Initializing game');
-
-    const initialSquares = initializeSquares(mino);
-    setSquares(initialSquares);
+    squaresRef.current = initializeSquares(minoRef.current);
+    updater();
   }, []);
 
   const placeMinoIfPossible = useCallback((newCoord: MinoCoord, newRotation: MinoRotation): void => {
@@ -84,13 +70,9 @@ export default function useMinoReducer(): [
       console.log('Cannot perform this move');
       return;
     }
-    setMino({ ...minoRef.current, coord: newCoord, rotation: newRotation });
-    // setSquares(newSquares);
-    setSquares((prev) => {
-      console.log('before:', prev);
-      console.log('after:', newSquares);
-      return newSquares;
-    });
+    minoRef.current = { ...minoRef.current, coord: newCoord, rotation: newRotation };
+    squaresRef.current = newSquares;
+    updater();
   }, []);
 
   const move = useCallback(
@@ -143,5 +125,5 @@ export default function useMinoReducer(): [
     return 0 <= c.x && 0 <= c.y && c.x < width && c.y < height;
   };
 
-  return [squares, moveLeft, moveRight, drop, rotateLeft, rotateRight];
+  return [squaresRef, moveLeft, moveRight, drop, rotateLeft, rotateRight];
 }
