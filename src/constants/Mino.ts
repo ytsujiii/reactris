@@ -7,12 +7,20 @@ export enum MinoEvent {
   hardDrop,
 }
 
-export interface MinoType {
+export interface MinoInterface {
   rotation: MinoRotation;
-  type: BlockType;
+  type: MinoType;
   coord: MinoCoord;
 }
-
+export enum MinoType {
+  i,
+  o,
+  t,
+  s,
+  z,
+  j,
+  l,
+}
 export enum BlockType {
   i,
   o,

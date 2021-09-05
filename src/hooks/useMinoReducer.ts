@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { BlockType, MinoCoord, MinoRotation, MinoShape, MinoType } from '../constants/Mino';
+import { BlockType, MinoCoord, MinoInterface, MinoRotation, MinoShape, MinoType } from '../constants/Mino';
 
 export default function useMinoReducer(): [
   BlockType[][] | undefined,
@@ -12,8 +12,8 @@ export default function useMinoReducer(): [
   const width = 10;
   const height = 20;
   const [squares, setSquares] = useState<BlockType[][]>();
-  const [mino, setMino] = useState<MinoType>();
-  const minoRef = useRef<MinoType>();
+  const [mino, setMino] = useState<MinoInterface>();
+  const minoRef = useRef<MinoInterface>();
   const squaresRef = useRef<typeof squares>();
   useEffect(() => {
     minoRef.current = mino;
@@ -26,7 +26,7 @@ export default function useMinoReducer(): [
   useEffect(() => {
     console.info('Initializing game');
 
-    const initialMino = { rotation: 0 as MinoRotation, type: BlockType.i, coord: { y: 0, x: 3 } };
+    const initialMino = { rotation: 0 as MinoRotation, type: MinoType.i, coord: { y: 0, x: 3 } };
     console.debug('Initial mino:', initialMino);
     const initialSquares = initializeSquares(initialMino);
     setMino(initialMino);
@@ -121,7 +121,7 @@ export default function useMinoReducer(): [
   const rotateRight = useCallback((): void => {
     rotate(1);
   }, [rotate]);
-  const initializeSquares = useCallback((initialMino: MinoType): BlockType[][] => {
+  const initializeSquares = useCallback((initialMino: MinoInterface): BlockType[][] => {
     const initialMinoShape = MinoShape[initialMino.type][initialMino.rotation];
     const initialSquares = Array.from(Array(height)).map(() => {
       return Array.from(Array(width)).map(() => BlockType.none);
