@@ -10,6 +10,7 @@ export default function useMinoReducer(
   const height = 20;
   const [minoRef, changeMino] = useMinoBag();
   const squaresRef = useRef<BlockType[][]>([]);
+  const stiffTimerId = useRef<number>();
 
   // initialize game
   useEffect(() => {
@@ -110,16 +111,21 @@ export default function useMinoReducer(
     move({ y: 0, x: 1 });
     boardUpdater();
   }, [move]);
-  const drop = useCallback((): void => {
-    if (!minoRef.current) return;
+  const drop = useCallback((): boolean => {
+    if (stiffTimerId.current) return false;
     const result = move({ y: 1, x: 0 });
     if (!result) {
-      scan();
-      changeMino();
-      placeMinoIfPossible(minoRef.current.coord, minoRef.current.rotation);
-      timerClearer();
+      stiffTimerId.current = window.setTimeout(() => {
+        if (!minoRef.current) return;
+        scan();
+        changeMino();
+        placeMinoIfPossible(minoRef.current.coord, minoRef.current.rotation);
+        timerClearer();
+        stiffTimerId.current = undefined;
+      }, 500);
     }
     boardUpdater();
+    return result;
   }, [move]);
   const hardDrop = (): void => {
     if (!minoRef.current) return;
