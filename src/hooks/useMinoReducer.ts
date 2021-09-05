@@ -17,6 +17,12 @@ export default function useMinoReducer(
     updater();
   }, []);
 
+  const setBoardStates = (newMino: MinoInterface, newSquares: BlockType[][]): void => {
+    minoRef.current = newMino;
+    squaresRef.current = newSquares;
+    updater();
+  };
+
   const placeMinoIfPossible = useCallback((newCoord: MinoCoord, newRotation: MinoRotation): void => {
     console.debug('placeMinoIfPossible');
     console.debug('oldSquares:', squaresRef.current);
@@ -70,9 +76,8 @@ export default function useMinoReducer(
       console.log('Cannot perform this move');
       return;
     }
-    minoRef.current = { ...minoRef.current, coord: newCoord, rotation: newRotation };
-    squaresRef.current = newSquares;
-    updater();
+
+    setBoardStates({ ...minoRef.current, coord: newCoord, rotation: newRotation }, newSquares);
   }, []);
 
   const move = useCallback(
