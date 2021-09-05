@@ -19,7 +19,7 @@ export default function useMinoBag(): [React.MutableRefObject<MinoInterface | un
   const minoBag = useRef<MinoType[]>();
   const popMinoBag = useCallback((): MinoInterface | undefined => {
     if (!minoBag.current) return;
-    return getInitialMino(minoBag.current.pop() as MinoType);
+    return getInitialMino(minoBag.current.shift() as MinoType);
   }, []);
   const mino = useRef<MinoInterface>();
   console.log(minoBag.current);
