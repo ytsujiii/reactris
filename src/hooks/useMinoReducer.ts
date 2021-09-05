@@ -42,7 +42,10 @@ export default function useMinoReducer(
         else if (!isValidCoord({ y: minoRef.current.coord.y + dy, x: minoRef.current.coord.x + dx })) {
           return;
         }
-        newSquares[minoRef.current.coord.y + dy][minoRef.current.coord.x + dx] = BlockType.none;
+
+        if (square !== BlockType.none) {
+          newSquares[minoRef.current.coord.y + dy][minoRef.current.coord.x + dx] = BlockType.none;
+        }
       });
     });
     // place new mino
@@ -95,7 +98,10 @@ export default function useMinoReducer(
     move({ y: 0, x: 1 });
   }, [move]);
   const drop = useCallback((): void => {
-    move({ y: 1, x: 0 });
+    const result = move({ y: 1, x: 0 });
+    if (!result) {
+      changeMino();
+    }
   }, [move]);
   const rotate = useCallback(
     (rotationDiff: 1 | 3): void => {
