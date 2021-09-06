@@ -1,6 +1,6 @@
 import { makeStyles } from '@material-ui/styles';
 import React from 'react';
-import { getMinoShape, MinoType } from '../constants/Mino';
+import { BlockType, getMinoShape, MinoType } from '../constants/Mino';
 import Square from './Square';
 
 interface Props {
@@ -12,6 +12,9 @@ const useStyles = makeStyles({
   row: {
     display: 'flex',
   },
+  next: {
+    margin: '25px 0',
+  },
 });
 
 export default function MinoBagComponent(props: Props): React.ReactElement {
@@ -21,12 +24,15 @@ export default function MinoBagComponent(props: Props): React.ReactElement {
   if (!minoBag || !nextMinoBag) {
     return <></>;
   } else {
-    const nexts = [...minoBag, ...nextMinoBag].slice(0, 5).map((minoType) => getMinoShape(minoType, 0));
+    const nexts = [...minoBag, ...nextMinoBag].slice(0, 5).map((minoType) => {
+      return getMinoShape(minoType, 0).filter((row) => {
+        return row.some((block) => block !== BlockType.none);
+      });
+    });
     return (
       <div>
-        <div>Next</div>
-        {nexts.map((minoShape) => (
-          <>
+        {nexts.map((minoShape, i) => (
+          <div key={i} className={classes.next}>
             {minoShape.map((row, y) => (
               <div className={classes.row} key={y}>
                 {row.map((square, x) => (
@@ -34,7 +40,7 @@ export default function MinoBagComponent(props: Props): React.ReactElement {
                 ))}
               </div>
             ))}
-          </>
+          </div>
         ))}
       </div>
     );
