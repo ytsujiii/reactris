@@ -2,6 +2,13 @@ import { makeStyles } from '@material-ui/styles';
 import clsx from 'clsx';
 import React, { useCallback } from 'react';
 import { BlockType } from '../constants/Mino';
+import textureI from '../images/texture-i.png';
+import textureJ from '../images/texture-j.png';
+import textureL from '../images/texture-l.png';
+import textureO from '../images/texture-o.png';
+import textureS from '../images/texture-s.png';
+import textureT from '../images/texture-t.png';
+import textureZ from '../images/texture-z.png';
 
 interface Props {
   state: BlockType;
@@ -11,27 +18,28 @@ const useStyles = makeStyles({
   square: {
     width: '20px',
     height: '20px',
+    backgroundSize: '100%',
   },
   i: {
-    backgroundColor: 'cyan',
+    backgroundImage: `url(${textureI})`,
   },
   o: {
-    backgroundColor: 'yellow',
+    backgroundImage: `url(${textureO})`,
   },
   t: {
-    backgroundColor: 'purple',
+    backgroundImage: `url(${textureT})`,
   },
   s: {
-    backgroundColor: 'lightgreen',
+    backgroundImage: `url(${textureS})`,
   },
   z: {
-    backgroundColor: 'red',
+    backgroundImage: `url(${textureZ})`,
   },
   j: {
-    backgroundColor: 'blue',
+    backgroundImage: `url(${textureJ})`,
   },
   l: {
-    backgroundColor: 'orange',
+    backgroundImage: `url(${textureL})`,
   },
 });
 
