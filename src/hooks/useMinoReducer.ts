@@ -11,6 +11,12 @@ import {
 import srs, { SrsPhase } from '../logics/srs';
 import useMinoBag from './UseMinoBag';
 
+const height = 20;
+const width = 10;
+const emptySquares = Array.from(Array(20), (row) => {
+  return Array.from(Array(10), () => BlockType.none);
+});
+
 export default function useMinoReducer(
   boardUpdater: () => void,
   timerClearer: () => void
@@ -27,11 +33,9 @@ export default function useMinoReducer(
   MinoType[] | undefined,
   MinoType[] | undefined
 ] {
-  const width = 10;
-  const height = 20;
   const [minoRef, changeMino, minoBag, nextMinoBag] = useMinoBag();
   const holdingMinoRef = useRef<MinoInterface>();
-  const squaresRef = useRef<BlockType[][]>([]);
+  const squaresRef = useRef<BlockType[][]>(emptySquares);
   const stiffTimerId = useRef<number>();
   const alreadyHolded = useRef<boolean>(false);
 

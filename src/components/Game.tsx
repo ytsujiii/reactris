@@ -123,8 +123,8 @@ export default function Game(): React.ReactElement {
 
   return (
     <div>
-      {!squaresRef.current || <BoardComponent boardState={boardState} squares={squaresRef.current} />}
       <HoldingMinoContainer holdingMino={holdingMinoRef.current} />
+      <BoardComponent boardState={boardState} squares={squaresRef.current} />
       <MinoBagComponent minoBag={minoBag} nextMinoBag={nextMinoBag} />
     </div>
   );
