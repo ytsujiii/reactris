@@ -1,11 +1,12 @@
 import { makeStyles } from '@material-ui/styles';
 import React from 'react';
-import { BlockType } from '../constants/Mino';
+import { BlockType, getMinoShape, MinoInterface } from '../constants/Mino';
 import Square from './Square';
 
 interface Props {
   boardState: number;
   squares: BlockType[][];
+  minoShadow: MinoInterface | undefined;
 }
 
 const useStyles = makeStyles({
@@ -22,11 +23,26 @@ const useStyles = makeStyles({
 
 export default function BoardComponent(props: Props): React.ReactElement {
   const classes = useStyles();
-  const { squares } = props;
+  const { squares, minoShadow } = props;
+
+  // TODO: copySquaresとまとめる
+  const squaresWithShadow = squares.map((row) => {
+    return row.map((block) => block);
+  });
+  if (minoShadow) {
+    const minoShadowShape = getMinoShape(minoShadow.type, minoShadow.rotation);
+    minoShadowShape.map((row, dy) => {
+      row.map((block, dx) => {
+        if (block === BlockType.none) return;
+        if (squares[minoShadow.coord.y + dy][minoShadow.coord.x + dx] !== BlockType.none) return;
+        squaresWithShadow[minoShadow.coord.y + dy][minoShadow.coord.x + dx] = BlockType.shadow;
+      });
+    });
+  }
 
   return (
     <div className={classes.root}>
-      {squares.map((row, y) => (
+      {squaresWithShadow.map((row, y) => (
         <div className={classes.row} key={y}>
           {row.map((square, x) => (
             <Square state={square} key={x} />

@@ -33,6 +33,7 @@ export enum BlockType {
   j,
   l,
   none,
+  shadow,
 }
 export type MinoRotation = 0 | 1 | 2 | 3;
 export class MinoCoord {

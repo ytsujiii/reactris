@@ -7,6 +7,7 @@ import textureJ from '../images/texture-j.png';
 import textureL from '../images/texture-l.png';
 import textureO from '../images/texture-o.png';
 import textureS from '../images/texture-s.png';
+import textureShadow from '../images/texture-shadow.png';
 import textureT from '../images/texture-t.png';
 import textureZ from '../images/texture-z.png';
 
@@ -41,6 +42,9 @@ const useStyles = makeStyles({
   l: {
     backgroundImage: `url(${textureL})`,
   },
+  shadow: {
+    backgroundImage: `url(${textureShadow})`,
+  },
 });
 
 export default function Square(props: Props): React.ReactElement {
@@ -62,6 +66,8 @@ export default function Square(props: Props): React.ReactElement {
         return classes.j;
       case BlockType.l:
         return classes.l;
+      case BlockType.shadow:
+        return classes.shadow;
       default:
         return null;
     }

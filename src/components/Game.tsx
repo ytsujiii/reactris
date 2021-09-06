@@ -16,6 +16,7 @@ export default function Game(): React.ReactElement {
   const [
     holdingMinoRef,
     squaresRef,
+    minoShadowRef,
     moveLeft,
     moveRight,
     drop,
@@ -124,7 +125,7 @@ export default function Game(): React.ReactElement {
   return (
     <div>
       <HoldingMinoContainer holdingMino={holdingMinoRef.current} />
-      <BoardComponent boardState={boardState} squares={squaresRef.current} />
+      <BoardComponent boardState={boardState} squares={squaresRef.current} minoShadow={minoShadowRef.current} />
       <MinoBagComponent minoBag={minoBag} nextMinoBag={nextMinoBag} />
     </div>
   );

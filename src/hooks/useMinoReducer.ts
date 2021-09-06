@@ -23,6 +23,7 @@ export default function useMinoReducer(
 ): [
   React.MutableRefObject<MinoInterface | undefined>,
   React.MutableRefObject<BlockType[][]>,
+  React.MutableRefObject<MinoInterface | undefined>,
   () => void,
   () => void,
   () => void,
@@ -38,12 +39,14 @@ export default function useMinoReducer(
   const squaresRef = useRef<BlockType[][]>(emptySquares);
   const stiffTimerId = useRef<number>();
   const alreadyHolded = useRef<boolean>(false);
+  const minoShadowRef = useRef<MinoInterface>();
 
   // initialize game
   useEffect(() => {
     if (!minoRef.current) return;
     console.info('Initializing game');
     squaresRef.current = initializeSquares(minoRef.current);
+    drawShadow();
     boardUpdater();
   }, []);
 
@@ -59,6 +62,15 @@ export default function useMinoReducer(
       return false;
     });
     squaresRef.current = [...Array.from(Array(height - scanned.length), () => emptyLine), ...scanned];
+  };
+
+  const drawShadow = (): void => {
+    if (!minoRef.current || !squaresRef.current) return;
+    let mino = { ...minoRef.current };
+    while (canMoveDown(mino)) {
+      mino = { ...mino, coord: mino.coord.down() };
+    }
+    minoShadowRef.current = mino;
   };
 
   const hold = () => {
@@ -100,6 +112,7 @@ export default function useMinoReducer(
     });
     squaresRef.current = newSquares;
     alreadyHolded.current = true;
+    drawShadow();
     boardUpdater();
   };
 
@@ -149,6 +162,7 @@ export default function useMinoReducer(
 
     minoRef.current = { ...minoRef.current, coord: newCoord, rotation: newRotation };
     squaresRef.current = newSquares;
+    drawShadow();
     return true;
   }, []);
 
@@ -161,12 +175,15 @@ export default function useMinoReducer(
     timerClearer();
   };
 
-  const canMoveDown = (): boolean => {
-    if (!minoRef.current || !squaresRef.current) return false;
-    const { type, rotation, coord } = minoRef.current;
+  const canMoveDown = (
+    mino: MinoInterface | undefined = minoRef.current,
+    squares: BlockType[][] | undefined = squaresRef.current
+  ): boolean => {
+    if (!mino || !squares) return false;
+    const { type, rotation, coord } = mino;
     // ミノの領域を行が逆順になるように走査する
     const minoShape = getMinoShape(type, rotation);
-    const squares = copySquares(squaresRef.current);
+    const copiedSquares = copySquares(squares);
     return minoShape
       .slice()
       .reverse()
@@ -176,8 +193,8 @@ export default function useMinoReducer(
           const x = coord.x + dx;
           if (block === BlockType.none) return true; // 空白は無視
           if (!isValidCoord(new MinoCoord({ y: y + 1, x }))) return false; // 真下が盤面外
-          if (squares[y + 1][x] !== BlockType.none) return false; // 真下がブロック
-          squares[y][x] = BlockType.none;
+          if (copiedSquares[y + 1][x] !== BlockType.none) return false; // 真下がブロック
+          copiedSquares[y][x] = BlockType.none;
           return true;
         });
       });
@@ -282,6 +299,7 @@ export default function useMinoReducer(
   return [
     holdingMinoRef,
     squaresRef,
+    minoShadowRef,
     moveLeft,
     moveRight,
     drop,
