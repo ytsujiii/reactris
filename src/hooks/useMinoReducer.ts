@@ -100,10 +100,6 @@ export default function useMinoReducer(
   };
 
   const placeMinoIfPossible = useCallback((newCoord: MinoCoord, newRotation: MinoRotation): boolean => {
-    console.debug('placeMinoIfPossible');
-    console.debug('oldSquares:', squaresRef.current);
-    console.debug('newCoord:', newCoord);
-    console.debug('newRotation:', newRotation);
     if (!minoRef.current || !squaresRef.current) {
       return false;
     }
@@ -125,33 +121,25 @@ export default function useMinoReducer(
       });
     });
     // place new mino
-    console.debug('ミノを置けるか・動かせるかをチェックする');
-    console.debug(newSquares);
     let invalid = false;
     newMinoShape.map((row, dy) => {
       row.map((square, dx) => {
-        console.debug('チェック対象:', { y: newCoord.y + dy, x: newCoord.x + dx });
         if (square === BlockType.none) {
-          console.debug('ここにはブロックがないので無視');
           return;
         }
 
         if (!isValidCoord(newCoord.move({ dy, dx }))) {
-          console.debug('ブロックが画面外にはみ出している');
           invalid = true;
           return;
         } else if (newSquares[newCoord.y + dy][newCoord.x + dx] !== BlockType.none) {
-          console.debug('ここには既にブロックがある', newSquares[newCoord.y + dy][newCoord.x + dx]);
           invalid = true;
           return;
         }
-        console.debug('OK!!!');
         newSquares[newCoord.y + dy][newCoord.x + dx] = square;
       });
     });
 
     if (invalid) {
-      console.log('Cannot perform this move');
       return false;
     }
 

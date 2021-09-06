@@ -28,7 +28,6 @@ export default function useMinoBag(): [
     return getInitialMino(minoBag.current.shift() as MinoType);
   }, []);
   const mino = useRef<MinoInterface>();
-  console.log(minoBag.current);
 
   useEffect(() => {
     if (mino.current) return;
