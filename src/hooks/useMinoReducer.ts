@@ -169,6 +169,28 @@ export default function useMinoReducer(
     timerClearer();
   };
 
+  const canMoveDown = (): boolean => {
+    if (!minoRef.current || !squaresRef.current) return false;
+    const { type, rotation, coord } = minoRef.current;
+    // ミノの領域を行が逆順になるように走査する
+    const minoShape = getMinoShape(type, rotation);
+    const squares = copySquares(squaresRef.current);
+    return minoShape
+      .slice()
+      .reverse()
+      .every((row, dy) => {
+        const y = coord.y + minoShape.length - dy - 1;
+        return row.every((block, dx) => {
+          const x = coord.x + dx;
+          if (block === BlockType.none) return true; // 空白は無視
+          if (!isValidCoord(new MinoCoord({ y: y + 1, x }))) return false; // 真下が盤面外
+          if (squares[y + 1][x] !== BlockType.none) return false; // 真下がブロック
+          squares[y][x] = BlockType.none;
+          return true;
+        });
+      });
+  };
+
   const moveLeft = useCallback((): void => {
     if (!minoRef.current) return;
     placeMinoIfPossible(minoRef.current.coord.left(), minoRef.current.rotation);
