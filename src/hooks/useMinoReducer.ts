@@ -8,6 +8,7 @@ import {
   MinoRotation,
   MinoType,
 } from '../constants/Mino';
+import srs, { SrsPhase } from '../logics/srs';
 import useMinoBag from './UseMinoBag';
 
 export default function useMinoReducer(
@@ -200,15 +201,17 @@ export default function useMinoReducer(
     boardUpdater();
   };
   const rotate = useCallback(
-    (rotationDiff: 1 | 3): void => {
+    (rotationDiff: 1 | -1): void => {
       if (!minoRef.current) return;
-      const newRotation = ((minoRef.current.rotation + rotationDiff) % 4) as MinoRotation;
-      placeMinoIfPossible(minoRef.current.coord, newRotation);
+      for (let srsPhase = 0; srsPhase <= 4; srsPhase++) {
+        const mino = srs(minoRef.current, rotationDiff, srsPhase as SrsPhase);
+        if (placeMinoIfPossible(mino.coord, mino.rotation)) return;
+      }
     },
     [placeMinoIfPossible]
   );
   const rotateLeft = useCallback((): void => {
-    rotate(3);
+    rotate(-1);
     boardUpdater();
   }, [rotate]);
   const rotateRight = useCallback((): void => {
