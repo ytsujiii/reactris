@@ -199,6 +199,8 @@ export default function useMinoReducer(
   const hardDrop = (): void => {
     // eslint-disable-next-line no-empty
     while (move({ y: 1, x: 0 })) {}
+    window.clearTimeout(stiffTimerId.current);
+    stiffTimerId.current = undefined;
     onMinoStiff();
     boardUpdater();
   };
