@@ -9,6 +9,12 @@ interface Props {
 }
 
 const useStyles = makeStyles({
+  root: {
+    display: 'inline-block',
+    borderLeft: '1px solid white',
+    borderRight: '1px solid white',
+    borderBottom: '1px solid white',
+  },
   row: {
     display: 'flex',
   },
@@ -19,7 +25,7 @@ export default function BoardComponent(props: Props): React.ReactElement {
   const { squares } = props;
 
   return (
-    <>
+    <div className={classes.root}>
       {squares.map((row, y) => (
         <div className={classes.row} key={y}>
           {row.map((square, x) => (
@@ -27,6 +33,6 @@ export default function BoardComponent(props: Props): React.ReactElement {
           ))}
         </div>
       ))}
-    </>
+    </div>
   );
 }

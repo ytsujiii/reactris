@@ -9,7 +9,6 @@ interface Props {
 
 const useStyles = makeStyles({
   square: {
-    border: 'solid 1px black',
     width: '20px',
     height: '20px',
   },
