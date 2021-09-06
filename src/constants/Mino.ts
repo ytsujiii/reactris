@@ -35,18 +35,40 @@ export enum BlockType {
   none,
 }
 export type MinoRotation = 0 | 1 | 2 | 3;
-export interface MinoCoord {
-  y: number;
-  x: number;
+export class MinoCoord {
+  public readonly y: number;
+  public readonly x: number;
+  constructor({ y, x }: { y: number; x: number }) {
+    this.y = y;
+    this.x = x;
+  }
+  public move({ dy, dx }: { dy?: number; dx?: number }): MinoCoord {
+    return new MinoCoord({
+      y: dy ? this.y + dy : this.y,
+      x: dx ? this.x + dx : this.x,
+    });
+  }
+  public left(): MinoCoord {
+    return this.move({ dx: -1 });
+  }
+  public right(): MinoCoord {
+    return this.move({ dx: +1 });
+  }
+  public up(): MinoCoord {
+    return this.move({ dy: -1 });
+  }
+  public down(): MinoCoord {
+    return this.move({ dy: +1 });
+  }
 }
 const initialCoords: MinoCoord[] = [
-  { y: 0, x: 3 }, // i
-  { y: 1, x: 4 }, // o
-  { y: 1, x: 3 }, // t
-  { y: 1, x: 3 }, // s
-  { y: 1, x: 3 }, // z
-  { y: 1, x: 3 }, // j
-  { y: 1, x: 3 }, // l
+  new MinoCoord({ y: 0, x: 3 }), // i
+  new MinoCoord({ y: 1, x: 4 }), // o
+  new MinoCoord({ y: 1, x: 3 }), // t
+  new MinoCoord({ y: 1, x: 3 }), // s
+  new MinoCoord({ y: 1, x: 3 }), // z
+  new MinoCoord({ y: 1, x: 3 }), // j
+  new MinoCoord({ y: 1, x: 3 }), // l
 ];
 export const getMinoShape = (type: MinoType, rotation: MinoRotation): BlockType[][] => {
   return MinoShape[type][rotation];

@@ -66,7 +66,7 @@ export default function useMinoReducer(
     currentMinoShape.map((row, dy) => {
       row.map((square, dx) => {
         if (!minoRef.current) return;
-        else if (!isValidCoord({ y: minoRef.current.coord.y + dy, x: minoRef.current.coord.x + dx })) {
+        else if (!isValidCoord(minoRef.current.coord.move({ dy, dx }))) {
           return;
         }
 
@@ -114,7 +114,7 @@ export default function useMinoReducer(
     oldMinoShape.map((row, dy) => {
       row.map((square, dx) => {
         if (!minoRef.current) return;
-        else if (!isValidCoord({ y: minoRef.current.coord.y + dy, x: minoRef.current.coord.x + dx })) {
+        else if (!isValidCoord(minoRef.current.coord.move({ dy, dx }))) {
           return;
         }
 
@@ -135,7 +135,7 @@ export default function useMinoReducer(
           return;
         }
 
-        if (!isValidCoord({ y: newCoord.y + dy, x: newCoord.x + dx })) {
+        if (!isValidCoord(newCoord.move({ dy, dx }))) {
           console.debug('ブロックが画面外にはみ出している');
           invalid = true;
           return;
@@ -168,25 +168,19 @@ export default function useMinoReducer(
     timerClearer();
   };
 
-  const move = useCallback(
-    (diff: MinoCoord): boolean => {
-      if (!minoRef.current) return false;
-      const newCoord = { y: minoRef.current.coord.y + diff.y, x: minoRef.current.coord.x + diff.x };
-      return placeMinoIfPossible(newCoord, minoRef.current.rotation);
-    },
-    [placeMinoIfPossible]
-  );
   const moveLeft = useCallback((): void => {
-    move({ y: 0, x: -1 });
+    if (!minoRef.current) return;
+    placeMinoIfPossible(minoRef.current.coord.left(), minoRef.current.rotation);
     boardUpdater();
-  }, [move]);
+  }, [placeMinoIfPossible]);
   const moveRight = useCallback((): void => {
-    move({ y: 0, x: 1 });
+    if (!minoRef.current) return;
+    placeMinoIfPossible(minoRef.current.coord.right(), minoRef.current.rotation);
     boardUpdater();
-  }, [move]);
+  }, [placeMinoIfPossible]);
   const drop = useCallback((): boolean => {
-    if (stiffTimerId.current) return false;
-    const result = move({ y: 1, x: 0 });
+    if (stiffTimerId.current || !minoRef.current) return false;
+    const result = placeMinoIfPossible(minoRef.current.coord.down(), minoRef.current.rotation);
     if (!result) {
       stiffTimerId.current = window.setTimeout(() => {
         onMinoStiff();
@@ -195,10 +189,11 @@ export default function useMinoReducer(
     }
     boardUpdater();
     return result;
-  }, [move]);
+  }, [placeMinoIfPossible]);
   const hardDrop = (): void => {
+    if (!minoRef.current) return;
     // eslint-disable-next-line no-empty
-    while (move({ y: 1, x: 0 })) {}
+    while (placeMinoIfPossible(minoRef.current.coord.down(), minoRef.current.rotation)) {}
     window.clearTimeout(stiffTimerId.current);
     stiffTimerId.current = undefined;
     onMinoStiff();
