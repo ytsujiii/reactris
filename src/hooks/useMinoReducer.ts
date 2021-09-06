@@ -181,12 +181,29 @@ export default function useMinoReducer(
 
   const moveLeft = useCallback((): void => {
     if (!minoRef.current) return;
+
+    window.clearTimeout(stiffTimerId.current);
+    stiffTimerId.current = undefined;
     placeMinoIfPossible(minoRef.current.coord.left(), minoRef.current.rotation);
+    if (!canMoveDown()) {
+      stiffTimerId.current = window.setTimeout(() => {
+        onMinoStiff();
+        stiffTimerId.current = undefined;
+      }, 500);
+    }
     boardUpdater();
   }, [placeMinoIfPossible]);
   const moveRight = useCallback((): void => {
     if (!minoRef.current) return;
+    window.clearTimeout(stiffTimerId.current);
+    stiffTimerId.current = undefined;
     placeMinoIfPossible(minoRef.current.coord.right(), minoRef.current.rotation);
+    if (!canMoveDown()) {
+      stiffTimerId.current = window.setTimeout(() => {
+        onMinoStiff();
+        stiffTimerId.current = undefined;
+      }, 500);
+    }
     boardUpdater();
   }, [placeMinoIfPossible]);
   const drop = useCallback((): void => {
@@ -213,9 +230,20 @@ export default function useMinoReducer(
   const rotate = useCallback(
     (rotationDiff: 1 | -1): void => {
       if (!minoRef.current) return;
+
+      window.clearTimeout(stiffTimerId.current);
+      stiffTimerId.current = undefined;
+
       for (let srsPhase = 0; srsPhase <= 4; srsPhase++) {
         const mino = srs(minoRef.current, rotationDiff, srsPhase as SrsPhase);
         if (placeMinoIfPossible(mino.coord, mino.rotation)) return;
+      }
+
+      if (!canMoveDown()) {
+        stiffTimerId.current = window.setTimeout(() => {
+          onMinoStiff();
+          stiffTimerId.current = undefined;
+        }, 500);
       }
     },
     [placeMinoIfPossible]
