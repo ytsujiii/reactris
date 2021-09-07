@@ -13,7 +13,7 @@ import useMinoBag from './UseMinoBag';
 
 const height = 20;
 const width = 10;
-const emptySquares = Array.from(Array(20), (row) => {
+const emptySquares = Array.from(Array(20), () => {
   return Array.from(Array(10), () => BlockType.none);
 });
 
