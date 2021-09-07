@@ -4,6 +4,7 @@ import Game from './Game';
 
 const useStyles = makeStyles({
   root: {
+    paddingTop: 50,
     width: '100vw',
     height: '100vh',
     display: 'flex',
