@@ -17,8 +17,8 @@ interface Props {
 
 const useStyles = makeStyles({
   square: {
-    width: '20px',
-    height: '20px',
+    width: '24px',
+    height: '24px',
     backgroundSize: '100%',
   },
   i: {

@@ -1,8 +1,15 @@
+import { makeStyles } from '@material-ui/styles';
 import React, { useCallback, useEffect, useReducer, useRef, useState } from 'react';
 import useMinoReducer from '../hooks/useMinoReducer';
 import BoardComponent from './Board';
 import HoldingMinoContainer from './HoldingMinoContainer';
 import MinoBagComponent from './MinoBagComponent';
+
+const useStyles = makeStyles({
+  root: {
+    display: 'flex',
+  },
+});
 
 export default function Game(): React.ReactElement {
   const das = 100; // (ms)
@@ -122,8 +129,9 @@ export default function Game(): React.ReactElement {
     };
   }, [handleKeyDown, handleKeyUp]);
 
+  const classes = useStyles();
   return (
-    <div>
+    <div className={classes.root}>
       <HoldingMinoContainer holdingMino={holdingMinoRef.current} />
       <BoardComponent boardState={boardState} squares={squaresRef.current} minoShadow={minoShadowRef.current} />
       <MinoBagComponent minoBag={minoBag} nextMinoBag={nextMinoBag} />

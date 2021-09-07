@@ -20,7 +20,7 @@ export default function HoldingMinoContainer(props: Props): React.ReactElement {
   if (holdingMino) {
     const minoShape = getMinoShape(holdingMino.type, holdingMino.rotation);
     return (
-      <>
+      <div>
         {!minoShape ||
           minoShape.map((row, y) => (
             <div className={classes.row} key={y}>
@@ -29,7 +29,7 @@ export default function HoldingMinoContainer(props: Props): React.ReactElement {
               ))}
             </div>
           ))}
-      </>
+      </div>
     );
   } else {
     return <></>;
