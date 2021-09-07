@@ -12,6 +12,7 @@ interface Props {
 const useStyles = makeStyles({
   root: {
     display: 'inline-block',
+    height: 'fit-content',
     borderLeft: '1px solid white',
     borderRight: '1px solid white',
     borderBottom: '1px solid white',
