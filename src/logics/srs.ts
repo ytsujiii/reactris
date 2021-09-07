@@ -71,6 +71,8 @@ const srs = (mino: MinoInterface, rotationDiff: -1 | 1, phase: SrsPhase): MinoIn
       mino1 = { ...rotatedMino, coord: mino.coord.move({ dx: -rotationDiff }) };
     } else if (newRotation === 1) {
       mino1 = { ...rotatedMino, coord: mino.coord.left() };
+    } else if (newRotation === 2) {
+      mino1 = { ...rotatedMino, coord: mino.coord.move({ dx: rotationDiff }) };
     } else {
       mino1 = { ...rotatedMino, coord: mino.coord.right() };
     }
