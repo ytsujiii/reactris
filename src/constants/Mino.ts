@@ -74,6 +74,12 @@ const initialCoords: MinoCoord[] = [
 export const getMinoShape = (type: MinoType, rotation: MinoRotation): BlockType[][] => {
   return MinoShape[type][rotation];
 };
+// 空行をカットして取得
+export const getFittedMinoShape = (type: MinoType, rotation: MinoRotation): BlockType[][] => {
+  return MinoShape[type][rotation].filter((row) => {
+    return row.some((block) => block !== BlockType.none);
+  });
+};
 const MinoShape = [
   [
     [

@@ -1,6 +1,6 @@
 import { makeStyles } from '@material-ui/styles';
 import React from 'react';
-import { BlockType, getMinoShape, MinoType } from '../constants/Mino';
+import { getFittedMinoShape, MinoType } from '../constants/Mino';
 import Square from './Square';
 
 interface Props {
@@ -24,11 +24,7 @@ export default function MinoBagComponent(props: Props): React.ReactElement {
   if (!minoBag || !nextMinoBag) {
     return <></>;
   } else {
-    const nexts = [...minoBag, ...nextMinoBag].slice(0, 5).map((minoType) => {
-      return getMinoShape(minoType, 0).filter((row) => {
-        return row.some((block) => block !== BlockType.none);
-      });
-    });
+    const nexts = [...minoBag, ...nextMinoBag].slice(0, 5).map((minoType) => getFittedMinoShape(minoType, 0));
     return (
       <div>
         {nexts.map((minoShape, i) => (
