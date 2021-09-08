@@ -1,0 +1,20 @@
+{
+  "files": {
+    "main.css": "/reactris/static/css/main.2fdd1cf2.chunk.css",
+    "main.js": "/reactris/static/js/main.5115633c.chunk.js",
+    "main.js.map": "/reactris/static/js/main.5115633c.chunk.js.map",
+    "runtime-main.js": "/reactris/static/js/runtime-main.ec848eb1.js",
+    "runtime-main.js.map": "/reactris/static/js/runtime-main.ec848eb1.js.map",
+    "static/js/2.de6b7db7.chunk.js": "/reactris/static/js/2.de6b7db7.chunk.js",
+    "static/js/2.de6b7db7.chunk.js.map": "/reactris/static/js/2.de6b7db7.chunk.js.map",
+    "index.html": "/reactris/index.html",
+    "static/css/main.2fdd1cf2.chunk.css.map": "/reactris/static/css/main.2fdd1cf2.chunk.css.map",
+    "static/js/2.de6b7db7.chunk.js.LICENSE.txt": "/reactris/static/js/2.de6b7db7.chunk.js.LICENSE.txt"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.ec848eb1.js",
+    "static/js/2.de6b7db7.chunk.js",
+    "static/css/main.2fdd1cf2.chunk.css",
+    "static/js/main.5115633c.chunk.js"
+  ]
+}
